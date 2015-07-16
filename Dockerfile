@@ -58,5 +58,8 @@ ENV MSGPACK_REPO https://github.com/msgpack/msgpack-ruby.git
 ENV BUILD_BRANCH master
 ENV BUILD_POSITION HEAD
 
+RUN curl -O https://gist.githubusercontent.com/cosmo0920/4c4456c57498aec3dea8/raw/494f1b3e8b2149ab9f1052115176decdbe3c03d4/fix-missing-win32-constant-ruby200.diff
+RUN patch /home/ubuntu/.rake-compiler/ruby/i686-w64-mingw32/ruby-2.0.0-p643/include/ruby-2.0.0/ruby/win32.h < fix-missing-win32-constant-ruby200.diff
+
 ### docker run -v `pwd`/pkg:/home/ubuntu/msgpack-ruby/pkg IMAGENAME
 CMD ["bash", "-c", "git remote add dockerbuild $MSGPACK_REPO && git fetch dockerbuild && git checkout $BUILD_BRANCH && git pull dockerbuild $BUILD_BRANCH && git reset --hard $BUILD_POSITION && bundle && rake clean && rake cross native gem RUBY_CC_VERSION=2.0.0:2.1.5:2.2.2"]
